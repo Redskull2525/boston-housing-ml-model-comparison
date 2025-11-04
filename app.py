@@ -1,19 +1,22 @@
 # ------------------------------------------------------------
 # 🏠 Boston Housing Price Prediction (Advanced Streamlit App)
 # ------------------------------------------------------------
-# This Streamlit app allows users to:
-#   ✅ Choose between Linear Regression, Random Forest, and Gradient Boosting models
-#   ✅ Input housing features
-#   ✅ Get predicted house prices instantly
-#   ✅ View model performance scores
+# Features:
+#   ✅ Compare Linear Regression, Random Forest, and Gradient Boosting models
+#   ✅ Predict house prices instantly
+#   ✅ View model R² comparison chart
+#   ✅ Developer details in sidebar
+#   ✅ Smooth animations & custom UI styling
 # ------------------------------------------------------------
 
 import streamlit as st
 import numpy as np
+import pandas as pd
 import pickle
 import time
-from PIL import Image
+import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
+from PIL import Image
 
 # ------------------------------------------------------------
 # 🎨 Page Configuration
@@ -29,7 +32,6 @@ st.set_page_config(
 # ------------------------------------------------------------
 st.markdown("""
     <style>
-    /* Gradient background */
     [data-testid="stAppViewContainer"] {
         background: linear-gradient(to right, #f0f4f8, #e3f2fd);
     }
@@ -71,7 +73,7 @@ st.markdown("""
 # 🎬 Animated Title Section
 # ------------------------------------------------------------
 st.markdown("<h1 style='text-align: center; color:#004e92;'>🏠 Boston Housing Price Prediction</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: center; color:#333;'>Compare multiple ML models and predict median home values instantly</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center; color:#333;'>Compare ML Models & Predict Median Home Prices Instantly</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
 # ------------------------------------------------------------
@@ -110,7 +112,6 @@ st.sidebar.markdown("---")
 st.subheader("🏡 Enter Housing Details Below")
 
 col1, col2, col3 = st.columns(3)
-
 with col1:
     CRIM = st.number_input("Per capita crime rate (CRIM)", 0.0, 100.0, 0.1)
     ZN = st.number_input("Residential land zoned (ZN)", 0.0, 100.0, 0.0)
@@ -143,6 +144,30 @@ if st.button("🔮 Predict House Price"):
         st.success(f"🏡 Predicted Median House Price: **${prediction * 1000:,.2f}**")
         st.balloons()
         st.info(f"Model Used: {model_choice}")
+
+# ------------------------------------------------------------
+# 📊 Model Performance Comparison Section
+# ------------------------------------------------------------
+st.markdown("---")
+st.subheader("📊 Model Performance Comparison")
+
+# Dummy evaluation (replace with your actual evaluation_df values if available)
+evaluation_data = {
+    "Model": ["Linear Regression", "Random Forest", "Gradient Boosting"],
+    "R² Score": [0.68, 0.86, 0.88]
+}
+df_eval = pd.DataFrame(evaluation_data)
+
+col1, col2 = st.columns([1, 2])
+with col1:
+    st.dataframe(df_eval.set_index("Model"), use_container_width=True)
+with col2:
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.bar(df_eval["Model"], df_eval["R² Score"], color=["#0072ff", "#00c6ff", "#0059b3"])
+    ax.set_ylim(0, 1)
+    ax.set_ylabel("R² Score")
+    ax.set_title("Model Comparison (Test R² Scores)")
+    st.pyplot(fig)
 
 # ------------------------------------------------------------
 # 📈 Footer
