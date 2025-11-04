@@ -1,12 +1,11 @@
 # ------------------------------------------------------------
-# 🏠 Boston Housing Price Prediction (Dark Themed Streamlit App)
+# 🏠 Boston Housing Price Prediction (13-Feature Dark App)
 # ------------------------------------------------------------
 # Features:
-#   ✅ Compare Linear Regression, Random Forest, and Gradient Boosting models
-#   ✅ Predict house prices interactively
-#   ✅ Model R² comparison chart
-#   ✅ Beautiful permanent sidebar with developer info
-#   ✅ Sleek dark mode design with neon blue highlights
+#   ✅ Takes all 13 Boston Housing inputs
+#   ✅ Works with models trained on original dataset
+#   ✅ Beautiful dark theme with glowing blue highlights
+#   ✅ Permanent sidebar with developer info
 # ------------------------------------------------------------
 
 import streamlit as st
@@ -18,61 +17,51 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
 
 # ------------------------------------------------------------
-# 🎨 Page Configuration
+# 🎨 Page Config
 # ------------------------------------------------------------
 st.set_page_config(
     page_title="Boston Housing Predictor",
     page_icon="🏠",
     layout="wide",
-    initial_sidebar_state="expanded"   # Sidebar always open
+    initial_sidebar_state="expanded"
 )
 
 # ------------------------------------------------------------
-# 🌙 Custom Dark Theme CSS
+# 🌙 Dark Theme CSS
 # ------------------------------------------------------------
 st.markdown("""
     <style>
-    /* --- MAIN APP BACKGROUND --- */
     [data-testid="stAppViewContainer"] {
         background: linear-gradient(180deg, #0d0d0d, #1a1a1a);
         color: #FAFAFA;
     }
-
-    /* --- SIDEBAR --- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #000428, #004e92);
         padding: 20px 15px;
         box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.5);
     }
-
     .sidebar-title {
         color: #00c6ff;
         font-size: 24px;
         font-weight: 800;
         text-align: center;
-        text-transform: uppercase;
         letter-spacing: 1.5px;
         margin-bottom: 20px;
     }
-
     .sidebar-sub {
         color: #cce7ff;
         font-size: 15px;
         margin: 8px 0;
     }
-
     .sidebar-link a {
         color: #66e0ff;
         text-decoration: none;
         font-weight: bold;
     }
-
     .sidebar-link a:hover {
         color: #00ffff;
         text-decoration: underline;
     }
-
-    /* --- BUTTONS --- */
     .stButton button {
         background: linear-gradient(90deg, #00c6ff, #0072ff);
         color: white;
@@ -84,19 +73,14 @@ st.markdown("""
         transition: 0.3s;
         box-shadow: 0 0 12px rgba(0, 198, 255, 0.4);
     }
-
     .stButton button:hover {
         transform: scale(1.05);
         box-shadow: 0 0 25px rgba(0, 198, 255, 0.8);
     }
-
-    /* --- TITLES & HEADERS --- */
     h1, h2, h3, h4 {
         color: #00c6ff;
         text-shadow: 0px 0px 8px #00c6ff;
     }
-
-    /* --- FOOTER --- */
     .footer {
         text-align: center;
         color: #999;
@@ -109,8 +93,8 @@ st.markdown("""
 # ------------------------------------------------------------
 # 🎬 App Header
 # ------------------------------------------------------------
-st.markdown("<h1 style='text-align: center;'>🏠 Boston Housing Price Prediction</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: center; color: #cccccc;'>Compare ML Models & Predict Median Home Prices Instantly</h4>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'>🏠 Boston Housing Price Prediction</h1>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align:center; color:#cccccc;'>Enter housing details to predict median home prices</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
 # ------------------------------------------------------------
@@ -133,37 +117,41 @@ def load_models():
 models = load_models()
 
 # ------------------------------------------------------------
-# 🧠 Sidebar - Developer Info (Permanent)
+# 🧠 Sidebar (Permanent)
 # ------------------------------------------------------------
 st.sidebar.markdown("<div class='sidebar-title'>👨‍💻 Developer Info</div>", unsafe_allow_html=True)
 st.sidebar.markdown("<div class='sidebar-sub'><b>Name:</b> Abhishek Shelke</div>", unsafe_allow_html=True)
 st.sidebar.markdown("<div class='sidebar-sub'><b>Degree:</b> Master’s in Computer Science</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub'><b>Interest:</b> Artificial Intelligence & Machine Learning</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>GitHub:</b> <a href='https://github.com/Redskull2525' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>LinkedIn:</b> <a href='https://linkedin.com/in/abhishek-s-b98895249' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
-st.sidebar.markdown("---")
+st.sidebar.markdown("<div class='sidebar-sub'><b>Focus:</b> Artificial Intelligence & Machine Learning</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>GitHub:</b> <a href='https://github.com/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>LinkedIn:</b> <a href='https://linkedin.com/in/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
 st.sidebar.markdown("<div style='font-size:13px; color:#ccc;'>📍 Pune, India</div>", unsafe_allow_html=True)
+st.sidebar.markdown("---")
 
 # ------------------------------------------------------------
-# ⚙️ User Input Section
+# 🏡 User Input (13 Inputs)
 # ------------------------------------------------------------
 st.subheader("🏡 Enter Housing Details")
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    CRIM = st.number_input("Per capita crime rate (CRIM)", 0.0, 100.0, 0.1)
-    ZN = st.number_input("Residential land zoned (ZN)", 0.0, 100.0, 0.0)
-    INDUS = st.number_input("Non-retail business acres (INDUS)", 0.0, 30.0, 5.0)
+    CRIM = st.number_input("CRIM - Crime rate per capita", 0.0, 100.0, 0.1)
+    ZN = st.number_input("ZN - Land zoned for large lots", 0.0, 100.0, 0.0)
+    INDUS = st.number_input("INDUS - Non-retail business acres", 0.0, 30.0, 5.0)
+    CHAS = st.selectbox("CHAS - Tract bounds river?", [0, 1])
 with col2:
-    RM = st.number_input("Average number of rooms (RM)", 1.0, 10.0, 6.0)
-    AGE = st.number_input("Older houses (AGE)", 0.0, 100.0, 50.0)
-    DIS = st.number_input("Distance to employment centers (DIS)", 0.0, 15.0, 4.0)
+    NOX = st.number_input("NOX - Nitric oxides concentration", 0.0, 1.0, 0.5)
+    RM = st.number_input("RM - Average rooms per dwelling", 1.0, 10.0, 6.0)
+    AGE = st.number_input("AGE - Owner-occupied units built before 1940 (%)", 0.0, 100.0, 50.0)
+    DIS = st.number_input("DIS - Distance to employment centers", 0.0, 15.0, 4.0)
 with col3:
-    TAX = st.number_input("Property tax rate (TAX)", 100.0, 800.0, 300.0)
-    PTRATIO = st.number_input("Pupil-teacher ratio (PTRATIO)", 10.0, 30.0, 18.0)
-    LSTAT = st.number_input("Lower status population (LSTAT)", 0.0, 40.0, 12.0)
+    RAD = st.number_input("RAD - Access to radial highways", 1.0, 24.0, 4.0)
+    TAX = st.number_input("TAX - Property tax rate", 100.0, 800.0, 300.0)
+    PTRATIO = st.number_input("PTRATIO - Pupil-teacher ratio", 10.0, 30.0, 18.0)
+    B = st.number_input("B - 1000(Bk - 0.63)^2", 0.0, 400.0, 300.0)
+    LSTAT = st.number_input("LSTAT - % lower status population", 0.0, 40.0, 12.0)
 
-input_data = np.array([[CRIM, ZN, INDUS, RM, AGE, DIS, TAX, PTRATIO, LSTAT]])
+input_data = np.array([[CRIM, ZN, INDUS, CHAS, NOX, RM, AGE, DIS, RAD, TAX, PTRATIO, B, LSTAT]])
 
 # ------------------------------------------------------------
 # 🧩 Model Selection
