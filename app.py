@@ -123,8 +123,8 @@ st.sidebar.markdown("<div class='sidebar-title'>👨‍💻 Developer Info</div>
 st.sidebar.markdown("<div class='sidebar-sub'><b>Name:</b> Abhishek Shelke</div>", unsafe_allow_html=True)
 st.sidebar.markdown("<div class='sidebar-sub'><b>Degree:</b> Master’s in Computer Science</div>", unsafe_allow_html=True)
 st.sidebar.markdown("<div class='sidebar-sub'><b>Focus:</b> Artificial Intelligence & Machine Learning</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>GitHub:</b> <a href='https://github.com/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>LinkedIn:</b> <a href='https://linkedin.com/in/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>GitHub:</b> <a href='https://github.com/Redskull2525' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>LinkedIn:</b> <a href='https://linkedin.com/in/abhishek-s-b98895249' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
 st.sidebar.markdown("<div style='font-size:13px; color:#ccc;'>📍 Pune, India</div>", unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
