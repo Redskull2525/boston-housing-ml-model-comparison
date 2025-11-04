@@ -120,11 +120,11 @@ st.markdown("---")
 def load_models():
     models = {}
     try:
-        with open("saved_models/Linear_Regression_BostonHousing.pkl", "rb") as f:
+        with open("Linear_Regression_BostonHousing.pkl", "rb") as f:
             models["Linear Regression"] = pickle.load(f)
-        with open("saved_models/Random_Forest_BostonHousing.pkl", "rb") as f:
+        with open("Random_Forest_BostonHousing.pkl", "rb") as f:
             models["Random Forest"] = pickle.load(f)
-        with open("saved_models/Gradient_Boosting_BostonHousing.pkl", "rb") as f:
+        with open("Gradient_Boosting_BostonHousing.pkl", "rb") as f:
             models["Gradient Boosting"] = pickle.load(f)
     except Exception as e:
         st.error("❌ Error loading models: " + str(e))
