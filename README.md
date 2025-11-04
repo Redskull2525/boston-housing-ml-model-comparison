@@ -68,10 +68,9 @@ boston-housing-ml-model-comparison/
 ├── 📘 Boston_Housing_Model_Comparison.ipynb     ← Notebook (EDA + model training)
 ├── 💻 app.py                                    ← Streamlit app (13 input version)
 ├── 📊 boston_housing.csv                        ← Dataset file
-├── 💾 saved_models/                             ← Pickled models (.pkl files)
-│   ├── Linear_Regression_BostonHousing.pkl
-│   ├── Random_Forest_BostonHousing.pkl
-│   └── Gradient_Boosting_BostonHousing.pkl
+├── Linear_Regression_BostonHousing.pkl           
+├── Random_Forest_BostonHousing.pkl
+|── Gradient_Boosting_BostonHousing.pkl
 ├── 📦 requirements.txt                           ← Dependencies
 ├── 📁 .streamlit/config.toml                     ← Dark theme config
 └── 📑 README.md                                  ← This file
