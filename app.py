@@ -1,12 +1,12 @@
 # ------------------------------------------------------------
-# 🏠 Boston Housing Price Prediction (Advanced Streamlit App)
+# 🏠 Boston Housing Price Prediction (Dark Themed Streamlit App)
 # ------------------------------------------------------------
 # Features:
 #   ✅ Compare Linear Regression, Random Forest, and Gradient Boosting models
-#   ✅ Predict house prices instantly
-#   ✅ View model R² comparison chart
-#   ✅ Developer details in sidebar
-#   ✅ Smooth animations & custom UI styling
+#   ✅ Predict house prices interactively
+#   ✅ Model R² comparison chart
+#   ✅ Beautiful permanent sidebar with developer info
+#   ✅ Sleek dark mode design with neon blue highlights
 # ------------------------------------------------------------
 
 import streamlit as st
@@ -16,7 +16,6 @@ import pickle
 import time
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
-from PIL import Image
 
 # ------------------------------------------------------------
 # 🎨 Page Configuration
@@ -24,56 +23,94 @@ from PIL import Image
 st.set_page_config(
     page_title="Boston Housing Predictor",
     page_icon="🏠",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"   # Sidebar always open
 )
 
 # ------------------------------------------------------------
-# 💫 Custom CSS for Styling
+# 🌙 Custom Dark Theme CSS
 # ------------------------------------------------------------
 st.markdown("""
     <style>
+    /* --- MAIN APP BACKGROUND --- */
     [data-testid="stAppViewContainer"] {
-        background: linear-gradient(to right, #f0f4f8, #e3f2fd);
+        background: linear-gradient(180deg, #0d0d0d, #1a1a1a);
+        color: #FAFAFA;
     }
-    [data-testid="stHeader"] {
-        background-color: rgba(0,0,0,0);
-    }
+
+    /* --- SIDEBAR --- */
     [data-testid="stSidebar"] {
-        background: linear-gradient(to bottom, #004e92, #000428);
-        color: white;
+        background: linear-gradient(180deg, #000428, #004e92);
+        padding: 20px 15px;
+        box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.5);
     }
+
     .sidebar-title {
-        color: #ffffff;
-        font-size: 22px;
-        font-weight: 700;
-        margin-bottom: 15px;
+        color: #00c6ff;
+        font-size: 24px;
+        font-weight: 800;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
     }
+
     .sidebar-sub {
-        color: #ddd;
-        font-size: 14px;
+        color: #cce7ff;
+        font-size: 15px;
+        margin: 8px 0;
     }
+
+    .sidebar-link a {
+        color: #66e0ff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .sidebar-link a:hover {
+        color: #00ffff;
+        text-decoration: underline;
+    }
+
+    /* --- BUTTONS --- */
     .stButton button {
         background: linear-gradient(90deg, #00c6ff, #0072ff);
         color: white;
         border: none;
-        padding: 0.6em 1.2em;
+        padding: 0.7em 1.3em;
         border-radius: 10px;
         font-size: 16px;
         font-weight: bold;
         transition: 0.3s;
+        box-shadow: 0 0 12px rgba(0, 198, 255, 0.4);
     }
+
     .stButton button:hover {
         transform: scale(1.05);
-        background: linear-gradient(90deg, #0072ff, #00c6ff);
+        box-shadow: 0 0 25px rgba(0, 198, 255, 0.8);
+    }
+
+    /* --- TITLES & HEADERS --- */
+    h1, h2, h3, h4 {
+        color: #00c6ff;
+        text-shadow: 0px 0px 8px #00c6ff;
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+        text-align: center;
+        color: #999;
+        margin-top: 30px;
+        font-size: 14px;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------
-# 🎬 Animated Title Section
+# 🎬 App Header
 # ------------------------------------------------------------
-st.markdown("<h1 style='text-align: center; color:#004e92;'>🏠 Boston Housing Price Prediction</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: center; color:#333;'>Compare ML Models & Predict Median Home Prices Instantly</h4>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🏠 Boston Housing Price Prediction</h1>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center; color: #cccccc;'>Compare ML Models & Predict Median Home Prices Instantly</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
 # ------------------------------------------------------------
@@ -83,11 +120,11 @@ st.markdown("---")
 def load_models():
     models = {}
     try:
-        with open("Linear_Regression_BostonHousing.pkl", "rb") as f:
+        with open("saved_models/Linear_Regression_BostonHousing.pkl", "rb") as f:
             models["Linear Regression"] = pickle.load(f)
-        with open("Random_Forest_BostonHousing.pkl", "rb") as f:
+        with open("saved_models/Random_Forest_BostonHousing.pkl", "rb") as f:
             models["Random Forest"] = pickle.load(f)
-        with open("Gradient_Boosting_BostonHousing.pkl", "rb") as f:
+        with open("saved_models/Gradient_Boosting_BostonHousing.pkl", "rb") as f:
             models["Gradient Boosting"] = pickle.load(f)
     except Exception as e:
         st.error("❌ Error loading models: " + str(e))
@@ -96,20 +133,21 @@ def load_models():
 models = load_models()
 
 # ------------------------------------------------------------
-# 🧠 Sidebar - Developer Details
+# 🧠 Sidebar - Developer Info (Permanent)
 # ------------------------------------------------------------
 st.sidebar.markdown("<div class='sidebar-title'>👨‍💻 Developer Info</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub'>Name: <b>Abhishek Shelke</b></div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub'>Master’s in Computer Science</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub'>Interest: AI & Machine Learning</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub'>GitHub: <a style='color:#80dfff;' href='https://github.com/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-sub'>LinkedIn: <a style='color:#80dfff;' href='https://linkedin.com/in/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub'><b>Name:</b> Abhishek Shelke</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub'><b>Degree:</b> Master’s in Computer Science</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub'><b>Interest:</b> Artificial Intelligence & Machine Learning</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>GitHub:</b> <a href='https://github.com/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-sub sidebar-link'><b>LinkedIn:</b> <a href='https://linkedin.com/in/abhishek-shelke' target='_blank'>@abhishek-shelke</a></div>", unsafe_allow_html=True)
 st.sidebar.markdown("---")
+st.sidebar.markdown("<div style='font-size:13px; color:#ccc;'>📍 Pune, India</div>", unsafe_allow_html=True)
 
 # ------------------------------------------------------------
 # ⚙️ User Input Section
 # ------------------------------------------------------------
-st.subheader("🏡 Enter Housing Details Below")
+st.subheader("🏡 Enter Housing Details")
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -146,12 +184,11 @@ if st.button("🔮 Predict House Price"):
         st.info(f"Model Used: {model_choice}")
 
 # ------------------------------------------------------------
-# 📊 Model Performance Comparison Section
+# 📊 Model Comparison Chart
 # ------------------------------------------------------------
 st.markdown("---")
 st.subheader("📊 Model Performance Comparison")
 
-# Dummy evaluation (replace with your actual evaluation_df values if available)
 evaluation_data = {
     "Model": ["Linear Regression", "Random Forest", "Gradient Boosting"],
     "R² Score": [0.68, 0.86, 0.88]
@@ -163,14 +200,14 @@ with col1:
     st.dataframe(df_eval.set_index("Model"), use_container_width=True)
 with col2:
     fig, ax = plt.subplots(figsize=(6, 4))
-    ax.bar(df_eval["Model"], df_eval["R² Score"], color=["#0072ff", "#00c6ff", "#0059b3"])
+    ax.bar(df_eval["Model"], df_eval["R² Score"], color=["#00c6ff", "#0072ff", "#33ccff"])
     ax.set_ylim(0, 1)
-    ax.set_ylabel("R² Score")
-    ax.set_title("Model Comparison (Test R² Scores)")
+    ax.set_ylabel("R² Score", color="white")
+    ax.set_title("Model Comparison (Test R² Scores)", color="#00c6ff")
+    ax.tick_params(colors="white")
     st.pyplot(fig)
 
 # ------------------------------------------------------------
 # 📈 Footer
 # ------------------------------------------------------------
-st.markdown("---")
-st.markdown("<h5 style='text-align:center; color:#333;'>Developed with ❤️ by <b>Abhishek Shelke</b></h5>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Developed by <b>Abhishek Shelke</b></div>", unsafe_allow_html=True)
